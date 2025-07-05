@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User, ArrowRight, X } from 'lucide-react';
-import { apiEndpoints } from '@/config/api';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UserSetupProps {
   onUserCreated: (userId: string) => void;
@@ -28,31 +28,45 @@ const UserSetup: React.FC<UserSetupProps> = ({ onUserCreated, onCancel }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch(apiEndpoints.createUser, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user_id: userId.trim() }),
-      });
+      // Check if user already exists
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', userId.trim())
+        .single();
 
-      const data = await response.json();
+      if (existingUser) {
+        toast.success(`Welcome back, ${userId}!`);
+        onUserCreated(userId.trim());
+        return;
+      }
 
-      if (response.ok) {
+      // Create new user
+      const { data, error } = await supabase
+        .from('users')
+        .insert([
+          {
+            id: userId.trim(),
+            name: userId.trim(),
+            preferences: {},
+            usage_stats: {}
+          }
+        ])
+        .select();
+
+      if (error) {
+        console.error('Error creating user:', error);
+        toast.error('Failed to create user account');
+        return;
+      }
+
+      if (data && data.length > 0) {
         toast.success(`Welcome, ${userId}! Your account has been created.`);
         onUserCreated(userId.trim());
-      } else {
-        if (response.status === 409) {
-          // User already exists, which is fine
-          toast.success(`Welcome back, ${userId}!`);
-          onUserCreated(userId.trim());
-        } else {
-          throw new Error(data.error || 'Failed to create user');
-        }
       }
     } catch (error) {
       console.error('Error creating user:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create user');
+      toast.error('Failed to create user account');
     } finally {
       setIsLoading(false);
     }
