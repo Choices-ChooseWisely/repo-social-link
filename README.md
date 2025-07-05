@@ -1,207 +1,315 @@
-# Runway & Rivets eBay Lister
+# 🚀 Runway & Rivets eBay Lister
 
-An intelligent, AI-powered eBay listing automation tool designed for vintage and collectible inventory management. Built with user experience at the forefront, allowing users to use their own AI providers and control their own costs.
+**AI-Powered eBay Listing Automation for Vintage & Collectible Inventory**
 
-## 🚀 Features
+A comprehensive solution that combines a **React frontend** (built by Lovable) with a **Python backend** to automate mass listing of vintage and collectible inventory on eBay using AI-enhanced metadata and direct API integration.
 
-### Core Functionality
-- **AI-Enhanced Listings**: Automatically generate compelling titles, descriptions, and metadata from product images
-- **Multi-AI Provider Support**: Use OpenAI GPT-4 Vision, Claude 3 Vision, Google Gemini, or custom providers
-- **User-Controlled Costs**: Connect your own AI provider accounts - you control your usage and costs
-- **Free-Only Mode**: Automatically cycle through your free AI quotas to minimize costs
-- **eBay API Integration**: Direct integration with eBay's Inventory and Trading APIs
-- **Batch Processing**: Process multiple items from CSV files with rich metadata
-- **Draft Mode**: Create listings in draft mode for review before publishing
+## 🏗️ Project Architecture
 
-### User Experience
-- **Clear Setup Guidance**: Step-by-step instructions with visual guides for API key setup
-- **Always User Control**: Every action can be declined, skipped, or undone
-- **Secure Storage**: API keys encrypted and stored securely
-- **Usage Tracking**: Monitor your AI usage and costs
-- **Flexible Configuration**: Add/remove AI providers anytime
-
-## 💰 Business Model
-
-- **No AI Usage Markup**: You pay your AI provider directly
-- **5% Commission**: We take 5% of your eBay sale price
-- **Transparent Pricing**: No hidden fees or surprise charges
-
-## 🛠️ Setup Instructions
-
-### Prerequisites
-- Python 3.8+
-- eBay Developer Account
-- AI Provider Account (OpenAI, Google Gemini, Claude, etc.)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/runway-rivets-ebay-lister.git
-   cd runway-rivets-ebay-lister
-   ```
-
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Configure your environment**
-   ```bash
-   cp env_example.txt .env
-   # Edit .env with your eBay credentials
-   ```
-
-### AI Provider Setup
-
-1. **Choose your AI provider(s)**
-   - OpenAI GPT-4 Vision (best for detailed analysis)
-   - Google Gemini (generous free tier)
-   - Claude 3 Vision (safety-focused)
-   - Custom providers
-
-2. **Get your API key**
-   - Follow the guided setup in the application
-   - We'll open the provider's website for you
-   - Copy your API key and paste it securely
-
-3. **Enable Free-Only Mode (optional)**
-   - Automatically use free quotas
-   - Cycle through multiple providers
-   - No surprise charges
-
-### eBay API Setup
-
-1. **Get eBay Developer Credentials**
-   - Visit [eBay Developer Portal](https://developer.ebay.com/)
-   - Create an application
-   - Get your App ID, Cert ID, and Dev ID
-
-2. **Configure in the application**
-   - Enter your credentials when prompted
-   - Complete OAuth authentication
-
-## 📖 Usage
-
-### Basic Usage
-
-1. **Start the application**
-   ```bash
-   python ebay_lister.py
-   ```
-
-2. **Configure your settings**
-   - Set up AI providers
-   - Configure eBay credentials
-   - Import your inventory CSV
-
-3. **Create listings**
-   - Upload product images
-   - Review AI-generated content
-   - Publish to eBay
-
-### Advanced Features
-
-- **Batch Processing**: Process multiple items at once
-- **Custom AI Prompts**: Tailor AI analysis for your niche
-- **Usage Analytics**: Track your AI usage and costs
-- **Backup & Restore**: Export/import your configuration
-
-## 🔧 Configuration
-
-### AI Provider Configuration
-```python
-# Example configuration
-{
-    "user_id": "your_email",
-    "ai_providers": {
-        "openai": "sk-...",
-        "google": "AIza...",
-        "anthropic": "sk-ant-..."
-    },
-    "preferences": {
-        "free_only_mode": true,
-        "auto_enhance_listings": true,
-        "draft_mode": true
-    }
-}
+```
+┌─────────────────┐    HTTP API    ┌─────────────────┐
+│   React Frontend │ ◄────────────► │  Python Backend  │
+│   (Lovable)     │                │   (Flask API)   │
+│   - User UI     │                │   - AI Providers│
+│   - Image Upload│                │   - eBay API    │
+│   - Drag & Drop │                │   - User Mgmt   │
+└─────────────────┘                └─────────────────┘
 ```
 
-### eBay Configuration
-```python
-{
-    "ebay_app_id": "your-app-id",
-    "ebay_cert_id": "your-cert-id", 
-    "ebay_dev_id": "your-dev-id",
-    "ebay_refresh_token": "your-refresh-token"
-}
+## 📁 Project Structure
+
+```
+runwayandrivets/
+├── frontend/                 # React app (Lovable)
+│   ├── src/
+│   ├── package.json
+│   └── ...
+├── backend/                  # Python backend
+│   ├── app.py               # Flask API server
+│   ├── user_config.py       # User management
+│   ├── ai_providers.py      # AI provider management
+│   ├── ai_setup_improved.py # AI setup utilities
+│   ├── ebay_lister.py       # eBay integration
+│   ├── token_manager.py     # OAuth token management
+│   ├── requirements_api.txt # Python dependencies
+│   └── images/              # Uploaded images
+└── README.md
 ```
 
-## 🏗️ Architecture
+## 🚀 Quick Start
 
-### Core Components
-- **AI Provider Manager**: Handles multiple AI providers and usage tracking
-- **User Configuration Manager**: Secure storage and management of user settings
-- **eBay API Client**: Integration with eBay's APIs
-- **Image Analysis Engine**: AI-powered image processing and metadata extraction
-- **Listing Generator**: Creates optimized eBay listings
+### Frontend (React)
+```bash
+# Install dependencies
+npm i
 
-### Security Features
-- **Encrypted Storage**: All sensitive data encrypted at rest
-- **Secure Key Management**: API keys never logged or exposed
-- **User Isolation**: Each user's data is completely separate
-- **Audit Logging**: Track all actions for security and debugging
+# Start development server
+npm run dev
+```
+
+### Backend (Python)
+```bash
+cd backend
+
+# Install Python dependencies
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements_api.txt
+
+# Start Flask server
+python app.py
+```
+
+The API will be available at `http://localhost:8000`
+
+## 🛠️ Key Features
+
+### 🤖 Multi-AI Provider Support
+- **OpenAI GPT-4** - Advanced AI for listing optimization
+- **Anthropic Claude** - High-quality content generation  
+- **Google Gemini** - Free tier available
+- **Local Ollama** - Completely free, runs locally
+- Secure API key storage with encryption
+- Users choose their preferred AI provider
+
+### 👤 User Management
+- User creation and configuration
+- Secure credential storage
+- Multi-user support
+- Configuration persistence
+
+### 🛒 eBay Integration
+- OAuth 2.0 authentication
+- Category management
+- Listing creation with AI enhancement
+- Image upload and linking
+- Draft mode support
+
+### 🖼️ Image Processing
+- Drag-and-drop upload interface
+- Automatic optimization
+- eBay-compatible formatting
+- Multiple image support
+
+## 🔌 API Endpoints
+
+### Health Check
+```
+GET /
+Response: {"status": "healthy", "service": "Runway & Rivets eBay Lister API"}
+```
+
+### User Management
+```
+POST /api/users
+GET /api/users/{user_id}
+DELETE /api/users/{user_id}
+```
+
+### AI Provider Management
+```
+GET /api/ai/providers
+GET /api/ai/setup
+POST /api/ai/validate
+POST /api/users/{user_id}/ai-provider
+```
+
+### eBay Integration
+```
+GET /api/ebay/categories
+POST /api/ebay/list-item
+```
+
+### File Upload
+```
+POST /api/upload/image
+GET /api/images/{filename}
+```
+
+## 🎯 User Experience
+
+### 1. **Simple Setup**
+- Users take pictures of their items
+- Drag and drop images into the app
+- Choose their preferred AI provider
+- Enter their API key (secure storage)
+
+### 2. **AI Enhancement**
+- AI analyzes images and generates:
+  - Compelling titles
+  - Detailed descriptions
+  - Relevant keywords
+  - Optimal pricing suggestions
+  - Category recommendations
+
+### 3. **Direct eBay Listing**
+- One-click listing creation
+- Automatic category selection
+- Image optimization for eBay
+- Draft mode for review before publishing
+
+## 🔒 Security Features
+
+- API key encryption using Fernet
+- Secure user configuration storage
+- CORS enabled for frontend integration
+- Input validation and sanitization
+- Error handling and logging
+
+## 🧪 Testing
+
+### Backend Testing
+```bash
+cd backend
+python diagnostics.py
+```
+
+### API Testing
+```bash
+# Health check
+curl http://localhost:8000/
+
+# List AI providers
+curl http://localhost:8000/api/ai/providers
+
+# Create user
+curl -X POST http://localhost:8000/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "test_user"}'
+```
+
+## 🚀 Deployment
+
+### Frontend
+- Deploy via Lovable's built-in deployment
+- Or deploy to Vercel, Netlify, etc.
+
+### Backend
+- Deploy to Heroku, AWS, or your preferred hosting
+- Set environment variables
+- Use a production WSGI server (Gunicorn, uWSGI)
+
+## 📚 Documentation
+
+- `backend/README.md` - Complete backend documentation
+- `LOVABLE_INTEGRATION_GUIDE.md` - Frontend integration guide
+- `LOVABLE_QUICK_START.md` - Quick setup guide
+
+## 🎯 Business Model
+
+### Revenue Streams
+1. **Subscription Tiers**
+   - Free: Limited listings per month
+   - Pro: Unlimited listings + advanced features
+   - Enterprise: White-label solutions
+
+2. **AI Usage**
+   - Users pay for their own AI API usage
+   - No markup on AI costs
+   - Transparent pricing
+
+3. **eBay Integration**
+   - Seamless eBay seller experience
+   - Reduced listing time
+   - Higher conversion rates
+
+### Competitive Advantages
+- **User Control**: Users choose their AI provider
+- **Cost Transparency**: No hidden AI costs
+- **Quality**: AI-enhanced listings perform better
+- **Simplicity**: Just take pictures and drop them in
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+This project combines:
+- **Frontend**: Built by Lovable with React/TypeScript
+- **Backend**: Python Flask API with AI integration
+- **Integration**: RESTful API communication
 
-### Development Setup
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+## 📞 Support
 
-## 📄 License
+For technical support or questions:
+1. Check the backend logs
+2. Verify API endpoints are accessible
+3. Test with the provided curl commands
+4. Review the integration documentation
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
-## 🆘 Support
+**Built with ❤️ for vintage and collectible sellers**
 
-- **Documentation**: [Wiki](https://github.com/yourusername/runway-rivets-ebay-lister/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/runway-rivets-ebay-lister/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/runway-rivets-ebay-lister/discussions)
+---
 
-## 🔗 Lovable Integration
+## Lovable Project Info
 
-This project is designed to integrate with [Lovable](https://lovable.dev/) for UI/UX development and testing. The modular architecture allows for easy frontend integration while maintaining the robust backend functionality.
+**URL**: https://lovable.dev/projects/9266465e-f94f-4048-9d07-bfc1566b24dd
 
-### Lovable Features
-- **User Experience Testing**: Test the AI setup flow and user interactions
-- **UI/UX Development**: Build beautiful interfaces for the listing creation process
-- **User Research**: Gather feedback on the AI provider setup experience
-- **A/B Testing**: Test different approaches to API key setup and user guidance
+## How can I edit this code?
 
-## 📊 Roadmap
+There are several ways of editing your application.
 
-- [ ] Web UI with drag-and-drop image upload
-- [ ] Mobile app for on-the-go listing creation
-- [ ] Advanced AI prompt customization
-- [ ] Integration with more AI providers
-- [ ] Real-time listing analytics
-- [ ] Automated pricing optimization
-- [ ] Multi-marketplace support (Amazon, Etsy, etc.)
+**Use Lovable**
 
-## 🙏 Acknowledgments
+Simply visit the [Lovable Project](https://lovable.dev/projects/9266465e-f94f-4048-9d07-bfc1566b24dd) and start prompting.
 
-- eBay Developer Program for API access
-- AI providers for their powerful vision APIs
-- Lovable for UI/UX development support
-- Open source community for inspiration and tools 
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
+
+**Edit a file directly in GitHub**
+
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
+
+**Use GitHub Codespaces**
+
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
+
+## What technologies are used for this project?
+
+This project is built with:
+
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
+- Python Flask (Backend)
+- AI Integration (OpenAI, Claude, Gemini, Ollama)
+
+## How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/9266465e-f94f-4048-9d07-bfc1566b24dd) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
