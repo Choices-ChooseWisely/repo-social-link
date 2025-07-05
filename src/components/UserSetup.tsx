@@ -4,15 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, ArrowRight } from 'lucide-react';
+import { User, ArrowRight, X } from 'lucide-react';
 import { apiEndpoints } from '@/config/api';
 import { toast } from 'sonner';
 
 interface UserSetupProps {
   onUserCreated: (userId: string) => void;
+  onCancel: () => void;
 }
 
-const UserSetup: React.FC<UserSetupProps> = ({ onUserCreated }) => {
+const UserSetup: React.FC<UserSetupProps> = ({ onUserCreated, onCancel }) => {
   const [userId, setUserId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,11 +61,19 @@ const UserSetup: React.FC<UserSetupProps> = ({ onUserCreated }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
+        <CardHeader className="text-center relative">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2"
+            onClick={onCancel}
+          >
+            <X className="w-4 h-4" />
+          </Button>
           <div className="mx-auto w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
             <User className="w-6 h-6 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome to Runway & Rivets</CardTitle>
+          <CardTitle className="text-2xl font-bold">Welcome to PictoPost</CardTitle>
           <CardDescription className="text-base">
             Create your account to start listing vintage items with AI assistance
           </CardDescription>
