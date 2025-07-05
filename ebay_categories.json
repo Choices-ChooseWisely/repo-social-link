@@ -1,0 +1,60 @@
+{
+  "category_mappings": {
+    "Home > Home Décor > Decorative Accessories > Decorative Jars": "20667",
+    "Electronics > Vintage Electronics > Calculators": "293",
+    "Accessories > Keychains & Key Fobs": "159912",
+    "Office Supplies > Filing & Organization > Binder Accessories": "159912",
+    "Collectibles > Transportation > Aviation > Airline Memorabilia": "45100",
+    "Collectibles > Transportation > Aviation > Airline Pins & Badges": "45100",
+    "Collectibles > Advertising > Retail > Clothing & Fashion > Pins": "45100",
+    "eBay Motors > Parts & Accessories > Car & Truck Parts": "6000",
+    "Collectibles > Militaria > Civil War (1861-65) > Bullets": "45100",
+    "Collectibles > Paper Money > US > Confederate Currency": "45100",
+    "Collectibles > Paper Money > US > Colonial Currency": "45100",
+    "Collectibles > Historical Memorabilia > Nazi Period Items": "45100",
+    "Electronics > Cameras & Photography > Digital Cameras": "625",
+    "Electronics > Cameras & Photo > Film Photography > Film Cameras": "625",
+    "Electronics > Vintage Electronics > Audio Devices": "293",
+    "Sporting Goods > Hunting > Scopes, Optics & Lasers > Binoculars": "159043",
+    "Collectibles > Magazines > Time Magazine": "45100",
+    "Collectibles > Paper > Stationery": "45100",
+    "Vintage > Bags & Luggage > Travel Bags": "11450",
+    "Travel > Luggage Accessories > Luggage Tags": "11450",
+    "Collectibles > Breweriana > Coasters": "45100",
+    "Collectibles > Transportation > Aviation > Airlines > TWA": "45100",
+    "Collectibles > Transportation > Aviation > Airline > TWA": "45100",
+    "Collectibles > Historical Memorabilia > Business & Industrial > Retail & Services": "45100",
+    "Collectibles > Holiday & Seasonal > Christmas: Current (1991-Now) > Ornaments": "45100",
+    "Collectibles > Transportation > Airline > TWA": "45100",
+    "Collectibles > Transportation > Automobilia > Patches": "45100",
+    "Jewelry & Watches > Watches > Wristwatches": "31387"
+  },
+  "condition_mappings": {
+    "new": "NEW",
+    "very good": "VERY_GOOD",
+    "good": "GOOD",
+    "fair": "FAIR",
+    "poor": "POOR"
+  },
+  "defaults": {
+    "default_category": "45100",
+    "default_condition": "GOOD",
+    "default_brand": "Unbranded",
+    "default_type": "Collectible",
+    "default_material": "Mixed Materials",
+    "default_color": "Multicolor",
+    "default_country": "Unknown",
+    "default_weight": 1.0,
+    "default_weight_unit": "POUND",
+    "currency": "USD",
+    "marketplace_id": "EBAY_US",
+    "auction_duration_days": 7,
+    "max_images": 12,
+    "max_title_length": 80
+  },
+  "policies": {
+    "fulfillment_policy_id": "FREIGHT_SHIPPING",
+    "payment_policy_id": "PAYMENT_IMMEDIATE",
+    "return_policy_id": "RETURN_30_DAYS"
+  }
+} 

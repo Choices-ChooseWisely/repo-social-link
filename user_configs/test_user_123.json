@@ -1,0 +1,21 @@
+{
+  "user_id": "test_user_123",
+  "created_at": "2025-07-04T22:44:26.294704",
+  "ai_provider": null,
+  "ai_api_key": null,
+  "ebay_app_id": null,
+  "ebay_cert_id": null,
+  "ebay_dev_id": null,
+  "ebay_refresh_token": null,
+  "preferences": {
+    "auto_enhance_listings": true,
+    "draft_mode": true,
+    "image_analysis": true,
+    "metadata_generation": true
+  },
+  "usage_stats": {
+    "listings_created": 0,
+    "ai_requests": 0,
+    "last_used": null
+  }
+}
