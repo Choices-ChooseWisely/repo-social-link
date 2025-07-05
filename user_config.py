@@ -295,7 +295,9 @@ class UserConfigManager:
             config = self._load_user_config(user_id)
             encrypted_key = config.get("ai_api_key")
             if encrypted_key:
-                return self._decrypt_data(encrypted_key)
+                # Convert string back to bytes for decryption
+                encrypted_bytes = encrypted_key.encode('latin1')
+                return self._decrypt_data(encrypted_bytes)
             return None
         except Exception as e:
             logger.error(f"Error getting AI API key: {e}")
@@ -306,7 +308,9 @@ class UserConfigManager:
         try:
             config = self._load_user_config(user_id)
             config["ai_provider"] = provider
-            config["ai_api_key"] = self._encrypt_data(api_key)
+            # Convert bytes to base64 string for JSON serialization
+            encrypted_bytes = self._encrypt_data(api_key)
+            config["ai_api_key"] = encrypted_bytes.decode('latin1')  # Store as string
             self._save_user_config(user_id, config)
         except Exception as e:
             logger.error(f"Error setting AI provider: {e}")
