@@ -3,10 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Camera, Settings, LogOut, Plus, Upload, Zap } from 'lucide-react';
+import { Camera, Settings, LogOut, Plus, Upload, Zap, Package } from 'lucide-react';
 import { toast } from 'sonner';
-import AIProviderSetup from '@/components/AIProviderSetup';
-import ImageUpload from '@/components/ImageUpload';
 import { supabase } from '@/integrations/supabase/client';
 
 interface DashboardProps {
@@ -105,23 +103,36 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
     toast.success('Listing created successfully!');
   };
 
+  // For now, we'll show placeholder components instead of the missing ones
   if (showAISetup) {
     return (
-      <AIProviderSetup
-        userId={userId}
-        onComplete={handleAISetupComplete}
-        onCancel={() => setShowAISetup(false)}
-      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>AI Provider Setup</CardTitle>
+            <CardDescription>This feature is coming soon</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => setShowAISetup(false)}>Back to Dashboard</Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   if (showImageUpload) {
     return (
-      <ImageUpload
-        userId={userId}
-        onComplete={handleImageUploadComplete}
-        onCancel={() => setShowImageUpload(false)}
-      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Image Upload</CardTitle>
+            <CardDescription>This feature is coming soon</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => setShowImageUpload(false)}>Back to Dashboard</Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
