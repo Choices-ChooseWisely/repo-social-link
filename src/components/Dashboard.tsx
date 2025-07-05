@@ -38,7 +38,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
         return;
       }
 
-      setUserData(data);
+      // Type guard to ensure data is valid before setting state
+      if (data && typeof data === 'object' && 'id' in data) {
+        setUserData(data as User);
+      }
     } catch (error) {
       console.error('Error loading user data:', error);
     }
@@ -57,7 +60,14 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
         return;
       }
 
-      setListings(data || []);
+      // Type guard to ensure data is valid before setting state
+      if (data && Array.isArray(data)) {
+        // Filter out any invalid entries and cast to proper type
+        const validListings = data.filter(item => 
+          item && typeof item === 'object' && 'id' in item && 'user_id' in item && 'title' in item
+        ) as Listing[];
+        setListings(validListings);
+      }
     } catch (error) {
       console.error('Error loading listings:', error);
     } finally {
