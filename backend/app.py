@@ -17,6 +17,7 @@ from user_config import UserConfigManager
 from ai_providers import AIProviderManager
 from ai_setup_improved import ImprovedAISetup
 from ebay_lister import EbayLister
+from listing_generator import ListingGenerator
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +30,7 @@ CORS(app)  # Enable CORS for frontend integration
 user_config_manager = UserConfigManager()
 ai_provider_manager = AIProviderManager()
 ai_setup = ImprovedAISetup()
+listing_generator = ListingGenerator(ai_provider_manager)
 
 # Draft storage directory
 DRAFTS_DIR = 'user_drafts'
@@ -504,6 +506,161 @@ def get_image(filename):
     except Exception as e:
         logger.error(f"Error serving image: {e}")
         return jsonify({"error": "Image not found"}), 404
+
+# Listing Generation Endpoints
+@app.route('/api/listing/generate', methods=['POST'])
+def generate_listing():
+    """Generate eBay listing from images using AI"""
+    try:
+        data = request.get_json()
+        image_urls = data.get('imageUrls', [])
+        message = data.get('message', '')
+        user_id = data.get('userId', '')
+        
+        if not image_urls or not message or not user_id:
+            return jsonify({"error": "Missing required fields: imageUrls, message, userId"}), 400
+        
+        # Get user's AI provider preference
+        ai_provider = user_config_manager.get_ai_provider(user_id) or "openai"
+        
+        # Generate listing
+        result = listing_generator.generate_listing_from_images(
+            image_urls=image_urls,
+            message=message,
+            user_id=user_id,
+            ai_provider=ai_provider
+        )
+        
+        if result["success"]:
+            # Store the listing (you can add database storage here)
+            listing_data = result["listing"]
+            
+            # Save to a simple JSON file for now
+            listings_dir = "listings"
+            os.makedirs(listings_dir, exist_ok=True)
+            
+            listing_file = os.path.join(listings_dir, f"listing_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+            with open(listing_file, 'w') as f:
+                json.dump(listing_data, f, indent=2)
+            
+            return jsonify({
+                "success": True,
+                "listing": listing_data,
+                "message": "Listing generated successfully"
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result["error"],
+                "message": result["message"]
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Error generating listing: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/listing/upload-images', methods=['POST'])
+def upload_images_for_listing():
+    """Upload multiple images for listing generation"""
+    try:
+        if 'images' not in request.files:
+            return jsonify({"error": "No images provided"}), 400
+        
+        files = request.files.getlist('images')
+        user_id = request.form.get('userId', 'default_user')
+        
+        if not files:
+            return jsonify({"error": "No images selected"}), 400
+        
+        uploaded_urls = []
+        
+        for file in files:
+            if file.filename == '':
+                continue
+                
+            # Validate image
+            image_data = file.read()
+            if not listing_generator.validate_image(image_data):
+                return jsonify({"error": f"Invalid image: {file.filename}"}), 400
+            
+            # Optimize image
+            optimized_data = listing_generator.optimize_image(image_data)
+            
+            # Save optimized image
+            filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
+            filepath = os.path.join('images', filename)
+            
+            # Ensure images directory exists
+            os.makedirs('images', exist_ok=True)
+            
+            with open(filepath, 'wb') as f:
+                f.write(optimized_data)
+            
+            # Create URL for the uploaded image
+            image_url = f"/api/images/{filename}"
+            uploaded_urls.append(image_url)
+        
+        return jsonify({
+            "success": True,
+            "imageUrls": uploaded_urls,
+            "message": f"Uploaded {len(uploaded_urls)} images successfully"
+        })
+        
+    except Exception as e:
+        logger.error(f"Error uploading images: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/listing/listings/<user_id>', methods=['GET'])
+def get_user_listings(user_id):
+    """Get all listings for a user"""
+    try:
+        listings_dir = "listings"
+        if not os.path.exists(listings_dir):
+            return jsonify({"listings": []})
+        
+        user_listings = []
+        for filename in os.listdir(listings_dir):
+            if filename.startswith(f"listing_{user_id}_"):
+                filepath = os.path.join(listings_dir, filename)
+                try:
+                    with open(filepath, 'r') as f:
+                        listing_data = json.load(f)
+                        user_listings.append(listing_data)
+                except Exception as e:
+                    logger.error(f"Error reading listing file {filename}: {e}")
+        
+        # Sort by generation date (newest first)
+        user_listings.sort(key=lambda x: x.get('generated_at', ''), reverse=True)
+        
+        return jsonify({
+            "success": True,
+            "listings": user_listings,
+            "count": len(user_listings)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting user listings: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/listing/listings/<user_id>/<listing_id>', methods=['DELETE'])
+def delete_listing(user_id, listing_id):
+    """Delete a specific listing"""
+    try:
+        listings_dir = "listings"
+        listing_file = os.path.join(listings_dir, f"listing_{user_id}_{listing_id}.json")
+        
+        if os.path.exists(listing_file):
+            os.remove(listing_file)
+            return jsonify({
+                "success": True,
+                "message": "Listing deleted successfully"
+            })
+        else:
+            return jsonify({"error": "Listing not found"}), 404
+            
+    except Exception as e:
+        logger.error(f"Error deleting listing: {e}")
+        return jsonify({"error": str(e)}), 500
 
 # Error handlers
 @app.errorhandler(404)
