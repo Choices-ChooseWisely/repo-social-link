@@ -6,33 +6,15 @@ import { Badge } from '@/components/ui/badge';
 import { Camera, Settings, LogOut, Plus, Upload, Zap, Package } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 
 interface DashboardProps {
   userId: string;
   onUserChange: (userId: string | null) => void;
 }
 
-interface UserData {
-  id: string;
-  name?: string;
-  email?: string;
-  ai_provider?: string;
-  preferences: any;
-  usage_stats: any;
-  created_at: string;
-}
-
-interface Listing {
-  id: string;
-  title: string;
-  description?: string;
-  category?: string;
-  condition?: string;
-  estimated_price?: string;
-  status: string;
-  image_urls: string[];
-  created_at: string;
-}
+type UserData = Database['public']['Tables']['users']['Row'];
+type Listing = Database['public']['Tables']['listings']['Row'];
 
 const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -303,10 +285,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
                       {listing.condition && `${listing.condition} • `}
                       {listing.estimated_price && `$${listing.estimated_price}`}
                     </span>
-                    <span>{new Date(listing.created_at).toLocaleDateString()}</span>
+                    <span>{listing.created_at ? new Date(listing.created_at).toLocaleDateString() : ''}</span>
                   </div>
                   
-                  {listing.image_urls && listing.image_urls.length > 0 && (
+                  {listing.image_urls && Array.isArray(listing.image_urls) && listing.image_urls.length > 0 && (
                     <div className="mt-3 text-xs text-gray-500">
                       {listing.image_urls.length} image{listing.image_urls.length > 1 ? 's' : ''}
                     </div>
