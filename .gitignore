@@ -73,12 +73,18 @@ Thumbs.db
 ebay_tokens.json
 refresh_token.txt
 
-# Images (if you want to exclude them)
-# images/
-# *.jpg
-# *.jpeg
-# *.png
-# *.gif
+# Images (excluded from repository)
+images/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.JPG
+*.JPEG
+*.PNG
+*.GIF
+*.mov
+*.MOV
 
 # CSV files (if they contain sensitive data)
 # *.csv
