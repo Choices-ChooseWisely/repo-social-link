@@ -43,6 +43,9 @@ venv.bak/
 user_configs/
 *.json
 
+# Generated listings
+listings/
+
 # Images
 images/
 *.jpg
