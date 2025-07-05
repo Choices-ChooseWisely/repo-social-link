@@ -1,13 +1,42 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState, useEffect } from 'react';
+import Dashboard from '@/components/Dashboard';
+import UserSetup from '@/components/UserSetup';
 
 const Index = () => {
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
+  // Check if user exists in localStorage on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('runway_rivets_user');
+    if (savedUser) {
+      setCurrentUser(savedUser);
+    }
+  }, []);
+
+  const handleUserCreated = (userId: string) => {
+    localStorage.setItem('runway_rivets_user', userId);
+    setCurrentUser(userId);
+  };
+
+  const handleUserChange = (userId: string | null) => {
+    if (userId) {
+      localStorage.setItem('runway_rivets_user', userId);
+    } else {
+      localStorage.removeItem('runway_rivets_user');
+    }
+    setCurrentUser(userId);
+  };
+
+  if (!currentUser) {
+    return <UserSetup onUserCreated={handleUserCreated} />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <Dashboard 
+      userId={currentUser} 
+      onUserChange={handleUserChange}
+    />
   );
 };
 
