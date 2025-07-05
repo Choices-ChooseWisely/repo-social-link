@@ -18,7 +18,6 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   const [activeTab, setActiveTab] = useState<'upload' | 'setup' | 'listings'>('upload');
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   // Check backend health
   const { data: healthData, isError: healthError } = useQuery({
@@ -43,6 +42,17 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
     enabled: !!userId
   });
 
+  // Get user's draft images
+  const { data: draftsData, refetch: refetchDrafts } = useQuery({
+    queryKey: ['userDrafts', userId],
+    queryFn: async () => {
+      const response = await fetch(apiEndpoints.getUserDrafts(userId));
+      if (!response.ok) return { drafts: [], count: 0 };
+      return response.json();
+    },
+    enabled: !!userId
+  });
+
   useEffect(() => {
     if (healthError) {
       toast.error('Backend is not available. Please start the Python server.');
@@ -52,8 +62,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   }, [healthData, healthError]);
 
   const handleImageUpload = (filename: string) => {
-    setUploadedImages(prev => [...prev, filename]);
-    toast.success('Image uploaded successfully!');
+    toast.success('Image saved as draft!');
+    refetchDrafts();
   };
 
   const handleAIProviderSetup = () => {
@@ -69,10 +79,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                Runway & Rivets eBay Lister
+                PictoPost
               </h1>
               <p className="text-gray-600 text-lg">
-                AI-powered listing automation for vintage & collectible inventory
+                From picture to posting - AI-powered eBay listing automation
               </p>
             </div>
             <div className="flex items-center space-x-3">
@@ -147,8 +157,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Images Uploaded</span>
-                    <Badge variant="secondary">{uploadedImages.length}</Badge>
+                    <span className="text-sm text-gray-600">Draft Images</span>
+                    <Badge variant="secondary">
+                      {draftsData?.count || 0}/10
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">AI Provider</span>
@@ -186,14 +198,14 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
                       No listings yet
                     </h3>
                     <p className="text-gray-500 mb-4">
-                      Upload some images and create your first AI-enhanced listing
+                      Upload images as drafts and generate your first AI-enhanced listing
                     </p>
                     <Button 
                       onClick={() => setActiveTab('upload')}
                       className="bg-blue-600 hover:bg-blue-700"
                     >
                       <Plus className="w-4 h-4 mr-2" />
-                      Create First Listing
+                      Upload First Image
                     </Button>
                   </div>
                 </CardContent>

@@ -18,7 +18,13 @@ export const apiEndpoints = {
   getEbayCategories: `${API_BASE_URL}/ebay/categories`,
   listItem: `${API_BASE_URL}/ebay/list-item`,
   
-  // File upload
+  // Draft image management
+  uploadDraftImage: `${API_BASE_URL}/upload/draft-image`,
+  getUserDrafts: (userId: string) => `${API_BASE_URL}/users/${userId}/drafts`,
+  deleteDraftImage: (userId: string, filename: string) => `${API_BASE_URL}/users/${userId}/drafts/${filename}`,
+  generateListings: `${API_BASE_URL}/generate-listings`,
+  
+  // File upload (legacy)
   uploadImage: `${API_BASE_URL}/upload/image`,
   getImage: (filename: string) => `${API_BASE_URL}/images/${filename}`,
   
