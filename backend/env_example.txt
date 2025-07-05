@@ -1,0 +1,16 @@
+# eBay OAuth 2.0 Credentials
+EBAY_CLIENT_ID=your_client_id_here
+EBAY_CLIENT_SECRET=your_client_secret_here
+EBAY_REDIRECT_URI=your_redirect_uri_here
+EBAY_AUTH_CODE=your_auth_code_here
+EBAY_REFRESH_TOKEN=your_refresh_token_here
+
+# Environment (production or sandbox)
+EBAY_ENVIRONMENT=production
+
+# Image hosting configuration
+IMAGE_BASE_URL=https://your-image-hosting-domain.com/images/
+
+# Application settings
+DRAFT_MODE=true
+AUCTION_DURATION=7 
