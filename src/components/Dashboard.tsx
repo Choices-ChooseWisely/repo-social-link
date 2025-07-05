@@ -6,18 +6,15 @@ import { Badge } from '@/components/ui/badge';
 import { Camera, Settings, LogOut, Plus, Upload, Zap, Package } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
+import type { User, Listing } from '@/types/database';
 
 interface DashboardProps {
   userId: string;
   onUserChange: (userId: string | null) => void;
 }
 
-type UserData = Database['public']['Tables']['users']['Row'];
-type Listing = Database['public']['Tables']['listings']['Row'];
-
 const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [showAISetup, setShowAISetup] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
@@ -31,7 +28,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   const loadUserData = async () => {
     try {
       const { data, error } = await supabase
-        .from('users')
+        .from('users' as any)
         .select('*')
         .eq('id', userId)
         .single();
@@ -50,7 +47,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   const loadListings = async () => {
     try {
       const { data, error } = await supabase
-        .from('listings')
+        .from('listings' as any)
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });

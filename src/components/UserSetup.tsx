@@ -30,7 +30,7 @@ const UserSetup: React.FC<UserSetupProps> = ({ onUserCreated, onCancel }) => {
     try {
       // Check if user already exists
       const { data: existingUser } = await supabase
-        .from('users')
+        .from('users' as any)
         .select('id')
         .eq('id', userId.trim())
         .single();
@@ -43,7 +43,7 @@ const UserSetup: React.FC<UserSetupProps> = ({ onUserCreated, onCancel }) => {
 
       // Create new user
       const { data, error } = await supabase
-        .from('users')
+        .from('users' as any)
         .insert([
           {
             id: userId.trim(),
