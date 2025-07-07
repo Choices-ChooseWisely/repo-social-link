@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   const loadUserData = async () => {
     try {
       const { data, error } = await supabase
-        .from('users' as any)
+        .from('users')
         .select('*')
         .eq('id', userId)
         .single();
@@ -50,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
   const loadListings = async () => {
     try {
       const { data, error } = await supabase
-        .from('listings' as any)
+        .from('listings')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
@@ -63,9 +62,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userId, onUserChange }) => {
       // Type guard to ensure data is valid before setting state
       if (data && Array.isArray(data)) {
         // Filter out any invalid entries and cast to proper type
-        const validListings = data.filter(item => 
-          item && typeof item === 'object' && 'id' in item && 'user_id' in item && 'title' in item
-        ) as Listing[];
+        const validListings = data.filter((item): item is Listing => 
+          item != null && 
+          typeof item === 'object' && 
+          'id' in item && 
+          'user_id' in item && 
+          'title' in item
+        );
         setListings(validListings);
       }
     } catch (error) {
